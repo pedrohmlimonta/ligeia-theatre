@@ -52,7 +52,9 @@ html, body {
 .portrait {
   position: absolute;
   bottom: 0;
-  height: 100%;
+  /* Altura padrão dos retratos (não-falantes): 88% do palco.
+     Speakers crescem um pouco. Nenhum translate pra baixo — fica sempre dentro. */
+  height: 88%;
   max-width: 38%;
   display: flex;
   flex-direction: column;
@@ -63,30 +65,26 @@ html, body {
   transition:
     opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  transform: translateY(20%);
 }
 
 /* Posições no palco */
 .portrait[data-position="far-left"]   { left: 2%; }
 .portrait[data-position="left"]       { left: 18%; }
-.portrait[data-position="center"]     { left: 50%; transform: translateX(-50%) translateY(20%); }
+.portrait[data-position="center"]     { left: 50%; transform: translateX(-50%); }
 .portrait[data-position="right"]      { left: 64%; }
 .portrait[data-position="far-right"]  { left: 80%; }
 
-/* Estado "falando": iluminado, à frente, ligeiramente subido */
+/* Estado "falando": iluminado, à frente, ligeiramente maior */
 .portrait.speaking {
   opacity: 1;
   filter: brightness(1) saturate(1) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
   z-index: 5;
-  transform: translateY(0);
-}
-.portrait[data-position="center"].speaking {
-  transform: translateX(-50%) translateY(0);
+  height: 100%;
 }
 
-/* Estado "entrando" (slide-up) */
+/* Estado "entrando" (slide-up vindo de baixo) */
 .portrait.entering {
   animation: slideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -94,32 +92,33 @@ html, body {
   animation: slideUpCenter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Estado "saindo" (slide-down) */
+/* Estado "saindo" (slide-down pra fora) */
 .portrait.exiting {
   animation: slideDown 0.5s cubic-bezier(0.55, 0, 0.78, 0) forwards;
 }
 
 @keyframes slideUp {
-  from { transform: translateY(110%); opacity: 0; }
-  to   { transform: translateY(20%); opacity: 0.55; }
+  from { opacity: 0; height: 0%; }
+  to   { opacity: 0.55; height: 88%; }
 }
 @keyframes slideUpCenter {
-  from { transform: translateX(-50%) translateY(110%); opacity: 0; }
-  to   { transform: translateX(-50%) translateY(20%); opacity: 0.55; }
+  from { opacity: 0; height: 0%; transform: translateX(-50%); }
+  to   { opacity: 0.55; height: 88%; transform: translateX(-50%); }
 }
 @keyframes slideDown {
-  to { transform: translateY(110%); opacity: 0; }
+  to { opacity: 0; height: 0%; }
 }
 
 .portrait-image {
   max-height: 100%;
   max-width: 100%;
   width: auto;
-  height: auto;
+  height: 100%;
   object-fit: contain;
   object-position: bottom center;
   user-select: none;
   -webkit-user-drag: none;
+  display: block;
 }
 
 /* Sutil "respiração" do retrato que está falando */

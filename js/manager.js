@@ -209,7 +209,18 @@ async function openTheatreModal() {
       anchorOrigin:    { vertical: "BOTTOM", horizontal: "CENTER" },
       transformOrigin: { vertical: "BOTTOM", horizontal: "CENTER" },
       disableClickAway: true,
+      hidePaper: true,      // remove o card branco do MUI — fundo do iframe transparente
+      marginThreshold: 0,   // sem margem entre o popover e a borda
     });
+
+    // Tenta trazer o action popover (painel do Mestre) de volta pro topo da pilha
+    // de z-index. Isso é necessário porque o OBR.popover.open abre em uma camada
+    // acima do action popover. Reabrir força o reposicionamento na pilha.
+    try {
+      if (typeof OBR.action?.open === "function") {
+        await OBR.action.open();
+      }
+    } catch (e) { /* ignora se a API não existir nessa versão da SDK */ }
   } catch (err) {
     console.error("Falha ao abrir o palco:", err);
   }
