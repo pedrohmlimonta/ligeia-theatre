@@ -79,6 +79,12 @@ OBR.onReady(async () => {
     // Para jogadores: troca o conteúdo principal por um botão de
     // abrir o palco na própria tela.
     renderPlayerView();
+    // Se o Mestre fechar o palco, fechamos o popover deste jogador também.
+    let wasOpen = (await readStage()).open;
+    onStageChange((s) => {
+      if (wasOpen && !s.open) closeTheatreModal();
+      wasOpen = s.open;
+    });
     return;
   }
 
@@ -100,9 +106,13 @@ OBR.onReady(async () => {
 
   // Inscreve mudanças
   onStageChange((s) => {
+    const wasOpen = cachedStage?.open;
     cachedStage = s;
     renderStage(s);
     updateToggleButton(s.open);
+    // Se o palco foi fechado (por qualquer Mestre), fecha o popover do palco
+    // também na tela deste cliente (Mestre ou não).
+    if (wasOpen && !s.open) closeTheatreModal();
   });
   onLibraryChange((l) => {
     cachedLibrary = l;
@@ -165,6 +175,7 @@ function setupHeader() {
       openTheatreModal();
       await OBR.action.setBadgeText("ON");
     } else {
+      closeTheatreModal();
       await OBR.action.setBadgeText(undefined);
     }
   });
@@ -175,28 +186,39 @@ function updateToggleButton(open) {
 }
 
 async function openTheatreModal() {
-  // Resolve URL absoluta a partir da localização atual da extensão
-  // (funciona tanto em GitHub Pages com subpath quanto em servidor local).
+  // Resolve URL absoluta a partir do manifest (funciona em GitHub Pages com subpath).
   const theatreUrl = new URL("theatre.html", window.location.href).href;
+  const popoverId = `${EXT_ID}/theatre-popover`;
+
+  // Tamanho do palco: largura quase total da tela e ~55% da altura.
+  // O resto da tela (metade superior) fica livre pra interagir com o mapa.
+  // Usamos window.screen porque window.innerWidth aqui é do popover do painel (420px).
+  const screenW = Math.max(800, window.screen?.width  || 1280);
+  const screenH = Math.max(600, window.screen?.height || 800);
+  const width  = Math.min(1920, Math.floor(screenW * 0.96));
+  const height = Math.floor(screenH * 0.55);
 
   try {
-    await OBR.modal.open({
-      id: `${EXT_ID}/theatre-modal`,
+    await OBR.popover.open({
+      id: popoverId,
       url: theatreUrl,
-      fullScreen: true,
-      hideBackdrop: true,
-      hidePaper: true,
+      width,
+      height,
+      anchorReference: "POSITION",
+      anchorPosition: { top: screenH, left: screenW / 2 },
+      anchorOrigin:    { vertical: "BOTTOM", horizontal: "CENTER" },
+      transformOrigin: { vertical: "BOTTOM", horizontal: "CENTER" },
+      disableClickAway: true,
     });
   } catch (err) {
-    console.error("Falha ao abrir o palco em modal:", err);
-    // Fallback: abre em popover grande
-    await OBR.popover.open({
-      id: `${EXT_ID}/theatre-popover`,
-      url: theatreUrl,
-      width: window.innerWidth || 1200,
-      height: Math.floor((window.innerHeight || 800) * 0.6),
-    });
+    console.error("Falha ao abrir o palco:", err);
   }
+}
+
+async function closeTheatreModal() {
+  try {
+    await OBR.popover.close(`${EXT_ID}/theatre-popover`);
+  } catch (err) { /* já fechado */ }
 }
 
 // ============================================================

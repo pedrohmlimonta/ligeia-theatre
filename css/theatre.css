@@ -12,8 +12,6 @@ html, body {
   background: transparent;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
-  /* Permite clicar através do palco para interagir com o Owlbear */
-  pointer-events: none;
 }
 
 .theatre-root {
@@ -22,18 +20,16 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  pointer-events: none;
 }
 
 .stage {
   position: relative;
   width: 100%;
-  /* O palco ocupa a metade inferior da tela */
-  height: 55vh;
+  /* O iframe inteiro já é a área do palco — preenche 100% */
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  pointer-events: none;
 }
 
 /* Quando vazio, esconde tudo */
@@ -62,7 +58,6 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  pointer-events: auto;
   opacity: 0.55;
   filter: brightness(0.65) saturate(0.85);
   transition:
@@ -148,7 +143,6 @@ html, body {
   border: 1px solid var(--name-color, #d4a85a);
   border-radius: 8px;
   padding: 14px 20px 16px;
-  pointer-events: auto;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow:

@@ -1,9 +1,9 @@
 {
   "name": "Ligéia Theatre",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "manifest_version": 1,
   "author": "Sua Autoria",
-  "description": "Inserções teatrais",
+  "description": "Inserções Teatrais Ligéia",
   "icon": "https://pedrohmlimonta.github.io/ligeia-theatre/icon.svg",
   "action": {
     "title": "Ligéia Theatre — Painel de Controle",
