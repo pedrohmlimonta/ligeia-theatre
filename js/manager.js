@@ -175,10 +175,14 @@ function updateToggleButton(open) {
 }
 
 async function openTheatreModal() {
+  // Resolve URL absoluta a partir da localização atual da extensão
+  // (funciona tanto em GitHub Pages com subpath quanto em servidor local).
+  const theatreUrl = new URL("theatre.html", window.location.href).href;
+
   try {
     await OBR.modal.open({
       id: `${EXT_ID}/theatre-modal`,
-      url: "/theatre.html",
+      url: theatreUrl,
       fullScreen: true,
       hideBackdrop: true,
       hidePaper: true,
@@ -188,7 +192,7 @@ async function openTheatreModal() {
     // Fallback: abre em popover grande
     await OBR.popover.open({
       id: `${EXT_ID}/theatre-popover`,
-      url: "/theatre.html",
+      url: theatreUrl,
       width: window.innerWidth || 1200,
       height: Math.floor((window.innerHeight || 800) * 0.6),
     });

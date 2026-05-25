@@ -4,11 +4,11 @@
   "manifest_version": 1,
   "author": "Sua Autoria",
   "description": "Inserções teatrais",
-  "icon": "/icon.svg",
+  "icon": "icon.svg",
   "action": {
     "title": "Ligéia Theatre — Painel de Controle",
-    "icon": "/icon.svg",
-    "popover": "/index.html",
+    "icon": "icon.svg",
+    "popover": "index.html",
     "height": 640,
     "width": 420
   }
