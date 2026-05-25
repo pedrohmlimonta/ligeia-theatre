@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "manifest_version": 1,
   "author": "Sua Autoria",
-  "description": "Inserções teatrais de personagens estilo Theatre Inserts, integradas ao sistema Ligéia. Permite ao Mestre exibir retratos de personagens com expressões, posições e diálogo na parte inferior da tela, para todos os jogadores.",
+  "description": "Inserções teatrais de personagens estilo Theatre Inserts",
   "icon": "/icon.svg",
   "action": {
     "title": "Ligéia Theatre — Painel de Controle",
