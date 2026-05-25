@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ligéia Theatre — Painel</title>
+  <link rel="stylesheet" href="/css/manager.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Cabeçalho -->
+    <header class="header">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3.5 5.5C3.5 4.4 4.4 3.5 5.5 3.5H11.5C12.6 3.5 13.5 4.4 13.5 5.5V10.5C13.5 13.26 11.26 15.5 8.5 15.5C5.74 15.5 3.5 13.26 3.5 10.5V5.5Z"/>
+          <path d="M10.5 8.5C10.5 11.26 12.74 13.5 15.5 13.5C18.26 13.5 20.5 11.26 20.5 8.5V3.5H14.5"/>
+        </svg>
+        <div>
+          <h1>Ligéia Theatre</h1>
+          <p class="subtitle">Painel do Mestre</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button id="toggle-theatre-btn" class="btn btn-primary" data-state="closed">
+          <span class="state-closed">Abrir Palco</span>
+          <span class="state-open">Fechar Palco</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Aviso para jogadores não-GM -->
+    <div id="non-gm-warning" class="warning hidden">
+      <p>Este painel é exclusivo do Mestre. Como jogador, o palco aparecerá automaticamente em sua tela quando o Mestre o abrir.</p>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <main id="main-content">
+      <!-- Aba navegação -->
+      <nav class="tabs">
+        <button class="tab active" data-tab="stage">Palco</button>
+        <button class="tab" data-tab="library">Biblioteca</button>
+        <button class="tab" data-tab="ligeia">Ligéia</button>
+      </nav>
+
+      <!-- Aba: PALCO (personagens atualmente em cena) -->
+      <section class="tab-panel active" id="tab-stage">
+        <div id="stage-empty" class="empty-state">
+          <p>Nenhum personagem no palco.</p>
+          <p class="hint">Vá em <strong>Biblioteca</strong> ou <strong>Ligéia</strong> para colocar alguém em cena.</p>
+        </div>
+        <div id="stage-list" class="stage-list"></div>
+      </section>
+
+      <!-- Aba: BIBLIOTECA (personagens cadastrados manualmente) -->
+      <section class="tab-panel" id="tab-library">
+        <div class="library-controls">
+          <button id="add-character-btn" class="btn btn-secondary">+ Novo Personagem</button>
+        </div>
+        <div id="library-list" class="library-list"></div>
+
+        <!-- Modal de criação/edição -->
+        <div id="character-editor" class="modal hidden">
+          <div class="modal-content">
+            <h2 id="editor-title">Novo Personagem</h2>
+            <form id="character-form">
+              <input type="hidden" id="char-id" />
+              <label>
+                Nome
+                <input type="text" id="char-name" required maxlength="40" />
+              </label>
+              <label>
+                URL do retrato principal
+                <input type="url" id="char-portrait" required placeholder="https://..." />
+              </label>
+              <label>
+                Cor de destaque (nome falando)
+                <input type="color" id="char-color" value="#d4a85a" />
+              </label>
+
+              <fieldset class="emotes-fieldset">
+                <legend>Emoções / Expressões (opcional)</legend>
+                <p class="hint">Adicione variações do retrato (feliz, triste, bravo etc.). O retrato principal acima é a expressão "neutro".</p>
+                <div id="emotes-list"></div>
+                <button type="button" id="add-emote-btn" class="btn btn-small">+ Adicionar Emoção</button>
+              </fieldset>
+
+              <div class="modal-actions">
+                <button type="button" id="cancel-editor-btn" class="btn btn-ghost">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Aba: LIGÉIA (integração com o sistema Ligéia) -->
+      <section class="tab-panel" id="tab-ligeia">
+        <div class="ligeia-status">
+          <h3>Conexão com Ligéia</h3>
+          <p id="ligeia-status-text">Verificando integração...</p>
+          <div class="ligeia-config">
+            <label>
+              URL base da API Ligéia (opcional)
+              <input type="url" id="ligeia-url" placeholder="https://seu-modulo-ligeia.exemplo/api" />
+            </label>
+            <button id="ligeia-connect-btn" class="btn btn-secondary">Conectar / Recarregar</button>
+          </div>
+        </div>
+        <div id="ligeia-characters" class="library-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/js/manager.js"></script>
+</body>
+</html>

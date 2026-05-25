@@ -1,0 +1,214 @@
+/* ============================================================
+   Ligéia Theatre — Palco (overlay sobre a cena do Owlbear)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  /* Permite clicar através do palco para interagir com o Owlbear */
+  pointer-events: none;
+}
+
+.theatre-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  /* O palco ocupa a metade inferior da tela */
+  height: 55vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+/* Quando vazio, esconde tudo */
+.stage[data-empty="true"] .portraits,
+.stage[data-empty="true"] .dialogue-box {
+  display: none;
+}
+
+/* ===== Retratos ===== */
+.portraits {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+}
+
+.portrait {
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  max-width: 38%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: auto;
+  opacity: 0.55;
+  filter: brightness(0.65) saturate(0.85);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(20%);
+}
+
+/* Posições no palco */
+.portrait[data-position="far-left"]   { left: 2%; }
+.portrait[data-position="left"]       { left: 18%; }
+.portrait[data-position="center"]     { left: 50%; transform: translateX(-50%) translateY(20%); }
+.portrait[data-position="right"]      { left: 64%; }
+.portrait[data-position="far-right"]  { left: 80%; }
+
+/* Estado "falando": iluminado, à frente, ligeiramente subido */
+.portrait.speaking {
+  opacity: 1;
+  filter: brightness(1) saturate(1) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
+  z-index: 5;
+  transform: translateY(0);
+}
+.portrait[data-position="center"].speaking {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Estado "entrando" (slide-up) */
+.portrait.entering {
+  animation: slideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.portrait[data-position="center"].entering {
+  animation: slideUpCenter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Estado "saindo" (slide-down) */
+.portrait.exiting {
+  animation: slideDown 0.5s cubic-bezier(0.55, 0, 0.78, 0) forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(110%); opacity: 0; }
+  to   { transform: translateY(20%); opacity: 0.55; }
+}
+@keyframes slideUpCenter {
+  from { transform: translateX(-50%) translateY(110%); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(20%); opacity: 0.55; }
+}
+@keyframes slideDown {
+  to { transform: translateY(110%); opacity: 0; }
+}
+
+.portrait-image {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Sutil "respiração" do retrato que está falando */
+.portrait.speaking .portrait-image {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.012); }
+}
+
+/* ===== Caixa de diálogo ===== */
+.dialogue-box {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 88%);
+  background: linear-gradient(180deg, rgba(15, 8, 11, 0.92) 0%, rgba(26, 18, 22, 0.94) 100%);
+  border: 1px solid var(--name-color, #d4a85a);
+  border-radius: 8px;
+  padding: 14px 20px 16px;
+  pointer-events: auto;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  animation: dialogueIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dialogue-box.hidden {
+  display: none;
+}
+
+@keyframes dialogueIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.dialogue-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--name-color, #d4a85a);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.dialogue-name::before {
+  content: '— ';
+  opacity: 0.6;
+}
+
+.dialogue-text {
+  color: #f4e9d8;
+  font-size: 15px;
+  line-height: 1.55;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Cursor "digitando" piscando no fim do texto */
+.dialogue-text.typing::after {
+  content: '▍';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--name-color, #d4a85a);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+/* Mobile / tela estreita */
+@media (max-width: 600px) {
+  .stage { height: 50vh; }
+  .portrait { max-width: 60%; }
+  .portrait[data-position="far-left"], .portrait[data-position="left"]    { left: 2%; }
+  .portrait[data-position="far-right"], .portrait[data-position="right"]  { left: 38%; }
+  .dialogue-box { padding: 10px 14px 12px; bottom: 8px; }
+  .dialogue-name { font-size: 16px; }
+  .dialogue-text { font-size: 13px; }
+}
