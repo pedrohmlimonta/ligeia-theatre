@@ -26,7 +26,20 @@ Extensão de Owlbear Rodeo inspirada no **Theatre Inserts** do Foundry VTT, inte
 
 ### Edição importante antes de subir
 
-Abra `js/state.js` e troque o `EXT_ID` para um valor único e seu (convenção de domínio reverso). Por exemplo:
+**1. Ajuste as URLs do `manifest.json`** para apontar para o seu domínio. O Owlbear precisa de URLs absolutas completas no manifest (caminhos relativos não funcionam de forma confiável no Pages com subcaminho). Substitua `pedrohmlimonta.github.io/ligeia-theatre` pelo seu usuário/repo:
+
+```json
+{
+  "icon": "https://SEU-USUARIO.github.io/SEU-REPO/icon.svg",
+  "action": {
+    "icon": "https://SEU-USUARIO.github.io/SEU-REPO/icon.svg",
+    "popover": "https://SEU-USUARIO.github.io/SEU-REPO/index.html",
+    ...
+  }
+}
+```
+
+**2. Troque o `EXT_ID`** em `js/state.js` para um valor único e seu (convenção de domínio reverso). Por exemplo:
 
 ```js
 export const EXT_ID = "io.github.seunome.ligeia-theatre";
